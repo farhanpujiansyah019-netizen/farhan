@@ -159,9 +159,9 @@ tr:hover td{ background: rgba(37, 99, 235, 0.05); }
 
 <div id="loginBox">
 <h3 id="judulLogin">🏫 Selamat Datang</h3>
-<p id="subLogin">Silakan login untuk mengelola database siswa</p>
-<input id="username" placeholder="👤 Username"><br>
-<input id="password" type="password" placeholder="🔑 Password"><br>
+<p id="subLogin">Isi username & password secara bebas untuk masuk</p>
+<input id="username" placeholder="👤 Username (Bebas)"><br>
+<input id="password" type="password" placeholder="🔑 Password (Bebas)"><br>
 <button onclick="login()">🚀 Masuk Akun</button>
 </div>
 
@@ -206,7 +206,7 @@ tr:hover td{ background: rgba(37, 99, 235, 0.05); }
 </select>
 <button class="purple" onclick="exportExcel()">📊 Export ke Excel</button>
 <button class="gray" onclick="window.print()">🖨️ Cetak Dokumen</button>
-<button class="danger" onclick="hapusSemua()" style="font-size:12px;">⚠️ Reset Semua Data</button>
+<button class="danger" onclick="hapusSemua()" style="font-size:12px;">⚠️️ Reset Semua Data</button>
 </div>
 
 <div id="data"></div>
@@ -239,7 +239,6 @@ tr:hover td{ background: rgba(37, 99, 235, 0.05); }
 let siswa=JSON.parse(localStorage.siswa||"[]");
 let editIndex=-1;
 
-// Fitur Baru 1: Greeting Sesuai Jam
 function aturSalamWaktu() {
   const jam = new Date().getHours();
   let teks = "👋 Selamat Datang";
@@ -253,16 +252,19 @@ function aturSalamWaktu() {
 }
 aturSalamWaktu();
 
+// LOGIK LOGIN BARU: Mengizinkan login dengan input bebas/asal
 function login(){
-let u=username.value,p=password.value;
-if(u=="112233"&&p=="i dan p"){
-loginBox.style.display="none";
-app.style.display="block";
-alert("✅ Login berhasil! Selamat bekerja.");
-tampil();
-}else{
-alert("❌ Username atau password salah!");
-}
+  let u = username.value.trim();
+  let p = password.value.trim();
+  
+  if(u !== "" && p !== ""){
+    loginBox.style.display = "none";
+    app.style.display = "block";
+    alert("✅ Login berhasil! Selamat bekerja.");
+    tampil();
+  } else {
+    alert("⚠️ Harap isi username dan password (bisa diisi bebas/asal)!");
+  }
 }
 
 function logout(){
@@ -272,9 +274,7 @@ username.value="";
 password.value="";
 }
 
-function cekStatusInput() {
-  // Hanya indikator internal sederhana untuk pembeda
-}
+function cekStatusInput() {}
 
 function tambah(){
 let n=nama.value.trim(),
@@ -306,7 +306,6 @@ x.nama.toLowerCase().includes(c) &&
 (!fk || x.kelas==fk)
 );
 
-// Fitur Baru: Info hasil pencarian
 if (c !== "") {
   infoCari.innerText = `Menampilkan ${hasil.length} siswa dari total ${siswa.length} data.`;
 } else {
@@ -369,7 +368,6 @@ kelas.map(k=>`<option value="${aman(k)}">${aman(k)}</option>`).join("");
 filterKelas.value=kelas.includes(sekarang)?sekarang:"";
 }
 
-// Grafik dengan Warna Dinamis Berdasarkan Nilai
 function buatGrafik(){
 if(!siswa.length){
 grafik.innerHTML="<p style='text-align:center;'>📭 Belum ada data statistik.</p>";
@@ -417,7 +415,6 @@ tampil();
 }
 }
 
-// Fitur Baru: Hapus Semua Data dengan Konfirmasi Berganda
 function hapusSemua() {
   if (siswa.length === 0) return alert("📭 Belum ada data untuk dihapus!");
   if (confirm("⚠️ PERINGATAN: Apakah Anda yakin ingin MENGHAPUS SEMUA DATA SISWA?")) {
